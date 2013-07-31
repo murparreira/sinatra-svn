@@ -1,0 +1,35 @@
+<label>Arquivos diferentes do trunk para produção</label>
+<form action="/commit_producao" method="POST">
+  <input type="checkbox" id="check_all"/> <strong>Marcar todos</strong>
+  <div id='div-files' class='row-fluid' style='margin-top: 20px;'>
+    <% @files.each do |f| %>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" id="check_all"/>
+          <input id="caminhos_" name="caminhos[]" type="checkbox" value="<%= f %>">
+          <%= f %>
+        </label>
+        <% if f.include? '.ini' %>
+          <div class="alert alert-danger">
+            Cuidado com esse arquivo
+          </div>
+        <% end %>
+        <% unless f.include? '.' %>
+          <div class="alert alert-info">
+            Todos os arquivos contidos dentro desse diretório serão commitados
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+    <% if @files.empty? %>
+      <label>Nenhum arquivo modificado.</label>
+    <% end %>
+    <div class="control-group">
+      <label class="control-label" for="mensagem">Mensagem de Commit</label>
+      <div class="controls">
+        <textarea class="span8" id="mensagem" name="mensagem" rows="5"></textarea>
+      </div>
+    </div>
+  </div>
+  <input class="btn btn-default" id="trunk" name="commit" type="submit" value="Commitar para a produção">
+</form>

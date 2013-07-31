@@ -1,0 +1,13 @@
+<h4>Diff de arquivo</h4>
+<h6><%= @file %></h6>
+<div class='row-fluid'>
+  <div class='well'>
+    <pre>
+      <% if @diff.empty? %>
+        Arquivo não está versionado.
+      <% else %>
+        <%= @diff %>
+      <% end %>
+    </pre>
+  </div>
+</div>
