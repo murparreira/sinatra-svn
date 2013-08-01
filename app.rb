@@ -11,6 +11,8 @@ class MyApp < Sinatra::Base
   configure do
     set :app_file, __FILE__
     set :show_production, false
+    set :trunk_path, '/var/www/html/trunk'
+    set :production_path, '/var/www/html/producao'
   end
 
   configure :development do

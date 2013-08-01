@@ -10,7 +10,7 @@ class MyApp < Sinatra::Base
   end
 
   get '/status' do
-    cmd = 'svn status /var/www/html/trunk'
+    cmd = "svn status #{settings.trunk_path}"
     string = `#{cmd}`
     string[0..7] = ''
     @files = string.split(/\n.\s+/)
@@ -26,10 +26,10 @@ class MyApp < Sinatra::Base
   end
 
   get '/diff' do
-    cmd = 'diff --exclude-from="/var/www/html/exclude.txt" --brief -r /var/www/html/trunk/ /var/www/html/producao/'
+    cmd = "diff --exclude-from='/var/www/html/exclude.txt' --brief -r #{settings.trunk_path} #{settings.production_path}"
     string = `#{cmd}`
     @files = string.split(/\n/)
-    @files.delete_if{|d| d.include?('Only in /var/www/html/producao')}
+    @files.delete_if{|d| d.include?("Only in #{settings.production_path}")}
     @files.map! do |d|
       if d.include?('Only in')
         d[0..7] = ''
@@ -46,14 +46,14 @@ class MyApp < Sinatra::Base
   end
 
   get '/update_trunk' do
-    cmd = 'svn update /var/www/html/trunk'
+    cmd = "svn update #{settings.trunk_path}"
     msg = `#{cmd}`
     flash[:notice] = msg
     redirect '/'
   end
 
   get '/update_prod' do
-    cmd = 'svn update /var/www/html/producao'
+    cmd = "svn update #{settings.production_path}"
     msg = `#{cmd}`
     flash[:notice] = msg
     redirect '/'
