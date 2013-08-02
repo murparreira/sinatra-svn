@@ -4,11 +4,6 @@ class MyApp < Sinatra::Base
     erb :index
   end
 
-  get '/test-flash' do
-    flash[:notice] = "Can't find that note."
-    redirect '/'
-  end
-
   get '/status' do
     cmd = "svn status #{settings.trunk_path}"
     string = `#{cmd}`
@@ -60,13 +55,32 @@ class MyApp < Sinatra::Base
   end
 
   post '/commit_trunk' do
-    selecionados = params[:caminhos]
+    selected = params[:caminhos]
     mensagem = params[:mensagem]
-    selecionados.each do |s|
-      msg_add = cmd_add = "svn add #{s}"
+    selected.each do |s|
+      cmd_add = "svn add #{s}"
+      msg_add = `#{cmd_add}`
+    end
+    cmd_commit = "svn commit #{selected.join(' ')} -m '#{mensagem}'"
+    msg_commit = `#{cmd_commit}`
+    flash[:notice] = msg_commit
+    redirect '/status'
+  end
+
+  post '/commit_producao' do
+    trunk_folder = settings.trunk_path.split('/').last
+    production_folder = settings.production_path.split('/').last
+    selected = params[:caminhos]
+    mensagem = params[:mensagem]
+    selected.each do |s|
+      file_production_path = s.gsub("/#{trunk_folder}/", "/#{production_folder}/")
+      cmd_copy = "cp -R #{s} #{file_production_path}"
+      `#{cmd_copy}`
+      cmd_add = "svn add #{file_production_path}"
       `#{cmd_add}`
     end
-    cmd_commit = "svn commit #{selecionados.join(' ')} -m '#{mensagem}'"
+    selected_production = selected.map {|s| s.gsub("/#{trunk_folder}/", "/#{production_folder}/")}
+    cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}'"
     msg_commit = `#{cmd_commit}`
     flash[:notice] = msg_commit
     redirect '/status'
