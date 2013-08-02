@@ -59,4 +59,17 @@ class MyApp < Sinatra::Base
     redirect '/'
   end
 
+  post '/commit_trunk' do
+    selecionados = params[:caminhos]
+    mensagem = params[:mensagem]
+    selecionados.each do |s|
+      msg_add = cmd_add = "svn add #{s}"
+      `#{cmd_add}`
+    end
+    cmd_commit = "svn commit #{selecionados.join(' ')} -m '#{mensagem}'"
+    msg_commit = `#{cmd_commit}`
+    flash[:notice] = msg_commit
+    redirect '/status'
+  end
+
 end
