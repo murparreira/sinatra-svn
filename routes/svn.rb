@@ -55,7 +55,7 @@ class MyApp < Sinatra::Base
   end
 
   post '/commit_trunk' do
-    selected = params[:caminhos]
+    selected = params[:files]
     mensagem = params[:mensagem]
     selected.each do |s|
       cmd_add = "svn add #{s}"
@@ -70,7 +70,7 @@ class MyApp < Sinatra::Base
   post '/commit_producao' do
     trunk_folder = settings.trunk_path.split('/').last
     production_folder = settings.production_path.split('/').last
-    selected = params[:caminhos]
+    selected = params[:files]
     mensagem = params[:mensagem]
     selected.each do |s|
       file_production_path = s.gsub("/#{trunk_folder}/", "/#{production_folder}/")
@@ -83,7 +83,7 @@ class MyApp < Sinatra::Base
     cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}'"
     msg_commit = `#{cmd_commit}`
     flash[:notice] = msg_commit
-    redirect '/status'
+    redirect '/diff'
   end
 
 end

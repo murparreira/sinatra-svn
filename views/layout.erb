@@ -33,7 +33,9 @@
     <div class="container">
       <% if flash[:notice] %>
         <div id="notice" class='alert alert-warning'>
-          <%= flash[:notice] %>
+          <pre>
+            <%= flash[:notice] %>
+          </pre>
         </div>
       <% end %>
       <div class="row-fluid">
