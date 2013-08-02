@@ -26,7 +26,7 @@ class MyApp < Sinatra::Base
   end
 
   get '/diff' do
-    cmd = "diff --exclude-from='/var/www/html/exclude.txt' --brief -r #{settings.trunk_path} #{settings.production_path}"
+    cmd = "diff --exclude-from='public/exclude.txt' --brief -r #{settings.trunk_path} #{settings.production_path}"
     string = `#{cmd}`
     @files = string.split(/\n/)
     @files.delete_if{|d| d.include?("Only in #{settings.production_path}")}
