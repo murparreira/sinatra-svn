@@ -86,4 +86,16 @@ class MyApp < Sinatra::Base
     redirect '/diff'
   end
 
+  get '/history_trunk' do
+    cmd = "svn log #{settings.trunk_path} --limit 10 -v"
+    @history = `#{cmd}`    
+    erb :history
+  end
+
+  get '/history_production' do
+    cmd = "svn log #{settings.production_path} --limit 10 -v"
+    @history = `#{cmd}`    
+    erb :history
+  end
+
 end
