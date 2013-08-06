@@ -6,7 +6,7 @@
       <% if @diff.empty? %>
         Arquivo não está versionado.
       <% else %>
-        <%= @diff %>
+        <%= ERB::Util.html_escape(@diff) %>
       <% end %>
     </pre>
   </div>
