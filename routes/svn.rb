@@ -1,6 +1,10 @@
 class MyApp < Sinatra::Base
 
   get '/' do
+    cmd_trunk = "svn info #{settings.trunk_path}"
+    cmd_production = "svn info #{settings.production_path}" if settings.show_production
+    @info_trunk = `#{cmd_trunk}`
+    @info_production = `#{cmd_production}` if settings.show_production
     erb :index
   end
 

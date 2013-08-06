@@ -1,34 +1,52 @@
 <div class='row-fluid'>
-  <div class="control-group">
-    <div class="controls">
-      <a href="/history_trunk" class="btn">Histórico trunk</a>
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <a href="/update_trunk" class="btn">Atualizar SVN trunk</a>
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <a href="/status" class="btn">Checar status trunk</a>
-    </div>
-  </div>
-  <% if settings.show_production %>
+  <div class='span4'>
     <div class="control-group">
       <div class="controls">
-        <a href="/history_production" class="btn">Histórico produção</a>
+        <a href="/history_trunk" class="btn">Histórico trunk</a>
       </div>
     </div>
     <div class="control-group">
       <div class="controls">
-        <a href="/update_prod" class="btn">Atualizar SVN produção</a>
+        <a href="/update_trunk" class="btn">Atualizar SVN trunk</a>
       </div>
     </div>
     <div class="control-group">
       <div class="controls">
-        <a href="/diff" class="btn">Diff do trunk para produção</a>
+        <a href="/status" class="btn">Checar status trunk</a>
       </div>
     </div>
-  <% end %>
+    <% if settings.show_production %>
+      <div class="control-group">
+        <div class="controls">
+          <a href="/history_production" class="btn">Histórico produção</a>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <a href="/update_prod" class="btn">Atualizar SVN produção</a>
+        </div>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <a href="/diff" class="btn">Diff do trunk para produção</a>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class='span8'>
+    <div class='well'>
+      <fieldset><legend>Info Trunk</legend>
+        <pre>
+          <%= @info_trunk %>
+        </pre>
+      </fieldset>
+      <% if settings.show_production %>
+      <fieldset><legend>Info Produção</legend>
+        <pre>
+          <%= @info_production %>
+        </pre>
+      </fieldset>
+      <% end %>
+    </div>
+  </div>
 </div>
