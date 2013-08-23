@@ -78,7 +78,7 @@ class MyApp < Sinatra::Base
     mensagem = params[:mensagem]
     selected.each do |s|
       file_production_path = s.gsub("/#{trunk_folder}/", "/#{production_folder}/")
-      cmd_copy = "cp -R #{s} #{file_production_path}"
+      cmd_copy = "rsync -av --exclude='.*' #{s} #{file_production_path}"
       `#{cmd_copy}`
       cmd_add = "svn add #{file_production_path}"
       `#{cmd_add}`
