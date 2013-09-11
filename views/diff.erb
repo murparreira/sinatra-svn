@@ -5,6 +5,7 @@
     <% @files.each do |f| %>
       <div class="checkbox">
         <label>
+          <a href="/diff_trunk_prod?file=<%= f %>">Diff</a>
           <input type="checkbox" id="check_all"/>
           <input id="files_" name="files[]" type="checkbox" value="<%= f %>">
           <%= f %>

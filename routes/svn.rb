@@ -102,4 +102,14 @@ class MyApp < Sinatra::Base
     erb :history
   end
 
+  get '/diff_trunk_prod' do
+    @trunk_file = params[:file]
+    trunk_folder = settings.trunk_path.split('/').last
+    production_folder = settings.production_path.split('/').last
+    @production_file = @trunk_file.gsub("/#{trunk_folder}/", "/#{production_folder}/")
+    cmd = "diff -u #{@trunk_file} #{@production_file}"
+    @diff = `#{cmd}`
+    erb :diff_file_trunk_prod
+  end
+
 end
