@@ -10,9 +10,12 @@ class MyApp < Sinatra::Base
 
   configure do
     set :app_file, __FILE__
-    set :show_production, true
+    set :show_production, false
     set :trunk_path, '/var/www/html/trunk'
     set :production_path, '/var/www/html/producao'
+    set :master_user, 'murillo.parreira'
+    set :master_password, '@m150'
+    set :senhas, {'edilson.ferreira' => '@e324', 'murillo.parreira' => '@m150', 'ricardo.pulice' => '%r357', 'danilo.lopes' => 'danilo123'}
   end
 
   configure :development do

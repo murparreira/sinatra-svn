@@ -61,7 +61,7 @@ class MyApp < Sinatra::Base
         cmd_add = "svn add #{s}"
         msg_add = `#{cmd_add}`
       end
-      cmd_commit = "svn commit #{selected.join(' ')} -m '#{mensagem}' --username 'murillo.parreira' --password '@m150'"
+      cmd_commit = "svn commit #{selected.join(' ')} -m '#{mensagem}' --username '#{settings.master_user}' --password '#{settings.master_password}'"
       msg_commit = `#{cmd_commit}`
       flash[:notice] = msg_commit
       redirect '/status'
@@ -72,14 +72,6 @@ class MyApp < Sinatra::Base
   end
 
   post '/commit_producao' do
-    senhas = {
-      'producao' => 'producao',
-      'edilson.ferreira' => '@e324',
-      'gabriela.ferreira' => '!g546',
-      'jordani.oliveira' => '&j254',
-      'murillo.parreira' => '@m150',
-      'ricardo.pulice' => '%r357'
-    }
     trunk_folder = settings.trunk_path.split('/').last
     production_folder = settings.production_path.split('/').last
     selected = params[:files]
@@ -94,7 +86,7 @@ class MyApp < Sinatra::Base
         `#{cmd_add}`
       end
       selected_production = selected.map {|s| s.gsub("/#{trunk_folder}/", "/#{production_folder}/")}
-      cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}' --username #{usuario} --password '#{senhas[usuario]}'"
+      cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}' --username #{usuario} --password '#{settings.senhas[usuario]}'"
       msg_commit = `#{cmd_commit}`
       flash[:notice] = msg_commit
       redirect '/diff'

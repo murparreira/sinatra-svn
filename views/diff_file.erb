@@ -2,12 +2,26 @@
 <h6><%= @file %></h6>
 <div class='row-fluid'>
   <div class='well'>
-    <pre>
       <% if @diff.empty? %>
         Arquivo não está versionado.
       <% else %>
-        <%= ERB::Util.html_escape(@diff) %>
+        <% @array = @diff.split("\n") %>
+        <% @array.each do |line| %>
+        	<% if line[0] == "-" %>
+        		<% css_class = "removido" %>
+        	<% elsif line[0] == "+" %>
+        		<% css_class = "adicionado" %>
+        	<% else %>
+        		<% css_class = "" %>
+        	<% end %>
+        	<p class="<%= css_class %>"><%= line %></p>
+        <% end %>
       <% end %>
-    </pre>
   </div>
 </div>
+
+<style type="text/css">
+	p { margin: 0 0 0 0 }
+	.removido { background-color: rgb(248, 140, 140) }
+	.adicionado { background-color: lightgreen }
+</style>
