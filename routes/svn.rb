@@ -44,50 +44,64 @@ class MyApp < Sinatra::Base
     erb :diff
   end
 
-  get '/update_trunk' do
+  get '/update_code' do
     cmd = "svn update #{settings.trunk_path}"
     msg = `#{cmd}`
-    flash[:notice] = msg
-    redirect '/'
-  end
-
-  get '/update_prod' do
-    cmd = "svn update #{settings.production_path}"
-    msg = `#{cmd}`
-    flash[:notice] = msg
+    cmd_prod = "svn update #{settings.production_path}"
+    msg_prod = `#{cmd_prod}`
+    flash[:notice] = msg + '<br>' + msg_prod
     redirect '/'
   end
 
   post '/commit_trunk' do
     selected = params[:files]
     mensagem = params[:mensagem]
-    selected.each do |s|
-      cmd_add = "svn add #{s}"
-      msg_add = `#{cmd_add}`
+    unless mensagem.include?("\'") || mensagem.include?("\"")
+      selected.each do |s|
+        cmd_add = "svn add #{s}"
+        msg_add = `#{cmd_add}`
+      end
+      cmd_commit = "svn commit #{selected.join(' ')} -m '#{mensagem}' --username 'murillo.parreira' --password '@m150'"
+      msg_commit = `#{cmd_commit}`
+      flash[:notice] = msg_commit
+      redirect '/status'
+    else
+      flash[:notice] = "Favor retirar as aspas simples/duplas da mensagem de commit e tentar novamente!"
+      redirect '/status'
     end
-    cmd_commit = "svn commit #{selected.join(' ')} -m '#{mensagem}'"
-    msg_commit = `#{cmd_commit}`
-    flash[:notice] = msg_commit
-    redirect '/status'
   end
 
   post '/commit_producao' do
+    senhas = {
+      'producao' => 'producao',
+      'edilson.ferreira' => '@e324',
+      'gabriela.ferreira' => '!g546',
+      'jordani.oliveira' => '&j254',
+      'murillo.parreira' => '@m150',
+      'ricardo.pulice' => '%r357'
+    }
     trunk_folder = settings.trunk_path.split('/').last
     production_folder = settings.production_path.split('/').last
     selected = params[:files]
     mensagem = params[:mensagem]
-    selected.each do |s|
-      file_production_path = s.gsub("/#{trunk_folder}/", "/#{production_folder}/")
-      cmd_copy = "rsync -av --exclude='.*' #{s} #{file_production_path}"
-      `#{cmd_copy}`
-      cmd_add = "svn add #{file_production_path}"
-      `#{cmd_add}`
+    usuario = params[:usuario]
+    unless mensagem.include?("\'") || mensagem.include?("\"")
+      selected.each do |s|
+        file_production_path = s.gsub("/#{trunk_folder}/", "/#{production_folder}/")
+        cmd_copy = "rsync -av --exclude='.*' #{s} #{file_production_path}"
+        `#{cmd_copy}`
+        cmd_add = "svn add #{file_production_path}"
+        `#{cmd_add}`
+      end
+      selected_production = selected.map {|s| s.gsub("/#{trunk_folder}/", "/#{production_folder}/")}
+      cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}' --username #{usuario} --password '#{senhas[usuario]}'"
+      msg_commit = `#{cmd_commit}`
+      flash[:notice] = msg_commit
+      redirect '/diff'
+    else
+      flash[:notice] = "Favor retirar as aspas simples/duplas da mensagem de commit e tentar novamente!"
+      redirect '/diff'
     end
-    selected_production = selected.map {|s| s.gsub("/#{trunk_folder}/", "/#{production_folder}/")}
-    cmd_commit = "svn commit #{selected_production.join(' ')} -m '#{mensagem}'"
-    msg_commit = `#{cmd_commit}`
-    flash[:notice] = msg_commit
-    redirect '/diff'
   end
 
   get '/history_trunk' do
@@ -107,7 +121,7 @@ class MyApp < Sinatra::Base
     trunk_folder = settings.trunk_path.split('/').last
     production_folder = settings.production_path.split('/').last
     @production_file = @trunk_file.gsub("/#{trunk_folder}/", "/#{production_folder}/")
-    cmd = "diff -u #{@trunk_file} #{@production_file}"
+    cmd = "diff -u #{@production_file} #{@trunk_file}"
     @diff = `#{cmd}`
     erb :diff_file_trunk_prod
   end

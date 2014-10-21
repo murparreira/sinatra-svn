@@ -1,5 +1,16 @@
 <label>Arquivos diferentes do trunk para produção</label>
 <form action="/commit_producao" method="POST">
+  <div class='control-group'>
+    <label class='control-label'>Selecione o Usuário</label>
+    <div class='controls'>
+      <select id='usuario' name='usuario'>
+        <option value=''>Selecione o seu usuário</option>
+        <option value='edilson.ferreira'>Shakira</option>
+        <option value='murillo.parreira'>Murillo</option>
+        <option value='ricardo.pulice'>Ricardo</option>
+      </select>
+    </div>
+  </div>
   <input type="checkbox" id="check_all"/> <strong>Marcar todos</strong>
   <div id='div-files' class='row-fluid' style='margin-top: 20px;'>
     <% @files.each do |f| %>
@@ -32,5 +43,5 @@
       </div>
     </div>
   </div>
-  <input class="btn btn-default" id="trunk" name="commit" type="submit" value="Commitar para a produção">
+  <input class="btn btn-default" id="submitproducao" name="commit" type="submit" value="Commitar para a produção">
 </form>
